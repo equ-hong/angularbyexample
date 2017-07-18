@@ -1,6 +1,6 @@
 import {Component, ViewChild, Inject, forwardRef} from '@angular/core';
 import {MyAudioDirective} from './my-audio.directive'
-import {WorkoutPlan, ExercisePlan, ExerciseProgressEvent, ExerciseChangedEvent} from '../model';
+import {WorkoutPlan, ExercisePlan, ExerciseProgressEvent, ExerciseChangedEvent} from '../../../services/model';
 
 @Component({
   selector: 'workout-audio',

@@ -4,7 +4,7 @@ import {Router, Event } from '@angular/router';
 @Component({
   selector: 'header',
   template: `<div class="navbar-header">
-                <h1>7 Minute Workout</h1>
+                <h1>Personal Trainer</h1>
              </div>
              <ul class="nav navbar-nav navbar-right">
                 <li *ngIf="showHistoryLink"><a [routerLink]="['history']" title="Workout History">History</a></li>
