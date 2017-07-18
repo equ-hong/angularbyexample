@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { Exercise, ExercisePlan} from "../../../services/model";
 import { WorkoutBuilderService } from "../builder-services/workout-builder-service";

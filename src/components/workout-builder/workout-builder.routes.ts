@@ -1,6 +1,7 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { ExerciseGuard } from "./exercise/exercise.guard";
 import { WorkoutGuard } from "./workout/workout.guard";
 
 import { WorkoutBuilderComponent}  from "./workout-builder.component";
@@ -20,7 +21,7 @@ export const workoutBuilderRoutes: Routes = [
              {path:'workout/:id', component: WorkoutComponent, canActivate: [WorkoutGuard] },
              {path:'exercises', component: ExercisesComponent},
              {path:'exercise/new', component: ExerciseComponent },
-             {path:'exercise/:id', component: ExerciseComponent }
+             {path:'exercise/:id', component: ExerciseComponent, canActivate: [ExerciseGuard] }
         ]
     }
 ];
