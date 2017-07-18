@@ -13,5 +13,4 @@ import {Component} from '@angular/core';
               </div>`
 })
 export class TrainerAppComponent {
-    name: string = 'World';
 }
