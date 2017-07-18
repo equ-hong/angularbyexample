@@ -10,6 +10,7 @@ import { WorkoutService } from "../../../services/workout-service";
 })
 export class ExercisesComponent implements OnInit{
     public exerciseList:Array<Exercise> = [];
+    
     constructor(
         private router:Router,
         private workoutService:WorkoutService) {}
@@ -21,4 +22,3 @@ export class ExercisesComponent implements OnInit{
         this.router.navigate(['./builder/exercise', exercise.name]);
     }
 }
-
