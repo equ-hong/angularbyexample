@@ -7,16 +7,23 @@ import { WorkoutService } from "../../../services/workout-service";
 @Injectable()
 export class ExerciseGuard implements CanActivate {
     exercise: Exercise;
+    sub: any;
 
     constructor(
-        private workoutService: WorkoutService,
-        private router: Router) {}
+        public workoutService: WorkoutService,
+        public router: Router) {}
 
     canActivate(
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ) {
-        this.exercise = this.workoutService.getExercise(route.params['id']);
+        this.workoutService.getExercise(route.params['id'])
+            .subscribe(
+                (exercise: Exercise) =>{
+                    this.exercise = exercise;
+                }
+            )
+
         if(this.exercise){ return true; }
         this.router.navigate(['/builder/exercises']);
         return false;

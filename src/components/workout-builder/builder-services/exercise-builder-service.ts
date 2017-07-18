@@ -5,10 +5,10 @@ import { WorkoutService } from "../../../services/workout-service";
 
 @Injectable()
 export class ExerciseBuilderService {
-    buildingExercise: Exercise;
+    buildingExercise: any;
     newExercise: boolean;
     
-    constructor(private workoutService:WorkoutService){}
+    constructor(public workoutService:WorkoutService){}
 
     startBuilding(name: string){
         if(name){

@@ -10,15 +10,22 @@ import { WorkoutService } from "../../../services/workout-service";
 })
 export class ExercisesComponent implements OnInit{
     exerciseList:Array<Exercise> = [];
-    
+
     constructor(
-        private router:Router,
-        private workoutService:WorkoutService) {}
+        public router:Router,
+        public workoutService:WorkoutService) {}
 
     ngOnInit() {
-        this.exerciseList = this.workoutService.getExercises();
+        this.workoutService.getExercises()
+            .subscribe(
+                (exerciseList: Exercise[]) => {
+                    this.exerciseList = exerciseList;
+                },
+                (err: any) => console.error(err)
+            );
     }
+
     onSelect(exercise:Exercise) {
-        this.router.navigate(['./builder/exercise', exercise.name]);
+        //this.router.navigate(['./builder/exercise', exercise.name]);
     }
 }

@@ -5,7 +5,7 @@ import { ExercisePlan } from "../../../services/model";
 
 @Injectable()
 export class WorkoutBuilderService {
-    buildingWorkout: WorkoutPlan;
+    buildingWorkout: any;
     newWorkout: boolean;
     firstExercise: boolean = true;
 
@@ -24,7 +24,7 @@ export class WorkoutBuilderService {
     }
 
     removeExercise(exercise: ExercisePlan){
-        var currentIndex = this.buildingWorkout.exercises.map(function(e) { return e.exercise.name; }).indexOf(exercise.exercise.name);
+        var currentIndex = this.buildingWorkout.exercises.map(function(e: any) { return e.exercise.name; }).indexOf(exercise.exercise.name);
         this.buildingWorkout.exercises.splice(currentIndex, 1)
     }
 

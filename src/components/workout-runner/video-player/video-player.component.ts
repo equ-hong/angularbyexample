@@ -17,7 +17,7 @@ export class VideoPlayerComponent {
 
   playVideo(videoId: string) {
     this.playbackStarted.emit(null);
-    
+
     var dialog = this.modal.open(VideoDialogComponent, overlayConfigFactory(new VideoDialogContext(videoId)));
     dialog
       .then((d) => d.result)

@@ -11,7 +11,7 @@ import { Exercise} from "../../../services/model";
     templateUrl: '/src/components/workout-builder/exercise/exercise.component.html',
 })
 
-export class ExerciseComponent{
+export class ExerciseComponent implements OnInit, OnDestroy{
     exercise: Exercise;
     submitted: boolean = false;
     exerciseForm: FormGroup;
