@@ -20,6 +20,7 @@
     'http',
     'platform-browser',
     'platform-browser-dynamic',
+    'router',
     'testing'
   ];
 
