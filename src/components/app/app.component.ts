@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+
 @Component({
     selector: 'trainer-app',
     template: `<div class="navbar navbar-default navbar-fixed-top top-navbar">

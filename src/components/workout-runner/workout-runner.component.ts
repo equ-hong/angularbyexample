@@ -1,9 +1,9 @@
 import {Component,OnInit} from '@angular/core';
-import {WorkoutPlan, ExercisePlan, Exercise} from './model'
+import {WorkoutPlan, ExercisePlan, Exercise} from './model';
 
 @Component({
   selector: 'workout-runner',
-  templateUrl: '/src/components/workout-runner/workout-runner.html',
+  templateUrl: '/src/components/workout-runner/workout-runner.html'
 })
 export class WorkoutRunnerComponent implements OnInit {
   workoutPlan: WorkoutPlan;
