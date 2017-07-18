@@ -1,5 +1,5 @@
-import { NgModule }      from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule} from '@angular/common';
 
 import { ExerciseComponent } from "./exercise/exercise.component";
 import { ExercisesComponent } from "./exercises/exercises.component";
