@@ -6,13 +6,10 @@ import {SearchPipe} from './search.pipe';
 
 @NgModule({
     imports: [],
-    declarations: [
-        OrderByPipe,
-        SearchPipe
-    ],
+    declarations: [OrderByPipe, 
+        SearchPipe],
     exports: [
-        OrderByPipe,
-        SearchPipe
-    ],
+        OrderByPipe, 
+        SearchPipe],
 })
 export class SharedModule { }
