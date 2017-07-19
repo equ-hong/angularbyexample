@@ -5,20 +5,20 @@ import { WorkoutService } from "../../../services/workout-service";
 
 @Injectable()
 export class ExerciseBuilderService {
-    buildingExercise: any;
+    buildingExercise: Exercise;
     newExercise: boolean;
     
     constructor(public workoutService:WorkoutService){}
 
-    startBuilding(name: string){
-        if(name){
-            this.buildingExercise = this.workoutService.getExercise(name)
-            this.newExercise = false;
-        }else{
-            this.buildingExercise = new Exercise("", "", "", "");
-            this.newExercise = true;
-        }
+    startBuildingNew(){
+        this.buildingExercise = new Exercise("", "", "", "");
+        this.newExercise = true;
         return this.buildingExercise;
+    }
+
+    startBuildingExisting(name: string){
+            this.newExercise = false;
+            return this.workoutService.getExercise(name)
     }
 
     save(){

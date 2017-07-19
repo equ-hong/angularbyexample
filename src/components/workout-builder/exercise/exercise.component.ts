@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, DoCheck } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Validators, FormArray, FormGroup, FormControl, FormBuilder } from '@angular/forms';
 
@@ -11,7 +11,7 @@ import { Exercise} from "../../../services/model";
     templateUrl: '/src/components/workout-builder/exercise/exercise.component.html',
 })
 
-export class ExerciseComponent implements OnInit, OnDestroy{
+export class ExerciseComponent implements OnInit, OnDestroy, DoCheck{
     exercise: Exercise;
     submitted: boolean = false;
     exerciseForm: FormGroup;
@@ -19,6 +19,7 @@ export class ExerciseComponent implements OnInit, OnDestroy{
     video: any;
     sub: any;
     videoArray: FormArray = new FormArray([]);
+    dataLoaded: boolean = false;
 
     constructor(
         public route: ActivatedRoute,
@@ -27,28 +28,53 @@ export class ExerciseComponent implements OnInit, OnDestroy{
         public formBuilder: FormBuilder
     ){}
 
-    ngOnInit():any{
+    ngOnInit(): any {
         this.sub = this.route.params.subscribe(params => {
-            let exerciseName = params['id'];
-            if (exerciseName === 'new') {
-                exerciseName = "";
+            if (!params['id']) {
+                this.exercise = this.exerciseBuilderService.startBuildingNew();
+            } else {
+                let exerciseName = params['id'];
+                this.exerciseBuilderService.startBuildingExisting(exerciseName)
+                    .subscribe(
+                        (data:Exercise) => {
+                            this.exercise = <Exercise> data;
+                            if (!this.exercise) {
+                                this.router.navigate(['/builder/exercises']);
+                            } else {
+                                this.exerciseBuilderService.buildingExercise = this.exercise;
+                            }
+                        },
+                        (err:any) => {
+                            if (err.status === 404) {
+                                this.router.navigate(['/builder/exercises'])
+                            } else {
+                                console.error(err)
+                            }
+                        }
+                    );
             }
-            this.exercise = this.exerciseBuilderService.startBuilding(exerciseName);
         });
-
-        this.buildExerciseForm();
     }
 
-    buildExerciseForm(){
-        this.exerciseForm = this.formBuilder.group({
-            'name': [this.exercise.name, [Validators.required, AlphaNumericValidator.invalidAlphaNumeric]],
-            'title': [this.exercise.title, Validators.required],
-            'description': [this.exercise.description, Validators.required],
-            'image': [this.exercise.image, Validators.required],
-            'nameSound': [this.exercise.nameSound],
-            'procedure': [this.exercise.procedure],
-            'videos': this.addVideoArray()
-        })
+    ngDoCheck():any {
+        if (!this.dataLoaded) {
+            this.buildExerciseForm();
+        }
+    }
+
+    buildExerciseForm() {
+        if (this.exercise) {
+            this.dataLoaded = true;
+            this.exerciseForm = this.formBuilder.group({
+                'name': [this.exercise.name, [Validators.required, AlphaNumericValidator.invalidAlphaNumeric]],
+                'title': [this.exercise.title, Validators.required],
+                'description': [this.exercise.description, Validators.required],
+                'image': [this.exercise.image, Validators.required],
+                'nameSound': [this.exercise.nameSound],
+                'procedure': [this.exercise.procedure],
+                'videos': this.addVideoArray()
+            })
+        }
     }
 
     addVideoArray():FormArray{

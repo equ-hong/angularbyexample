@@ -22,11 +22,29 @@ export class WorkoutComponent implements OnInit, OnDestroy{
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-            let workoutName = params['id'];
-            if (!workoutName) {
-                workoutName = "";
+            if (!params['id']) {
+                this.workout = this.workoutBuilderService.startBuildingNew();
+            } else {
+                let workoutName = params['id'];
+                this.workoutBuilderService.startBuildingExisting(workoutName)
+                    .subscribe(
+                        (data:WorkoutPlan) => {
+                            this.workout = <WorkoutPlan>data;
+                            if (!this.workout) {
+                                this.router.navigate(['/builder/workouts']);
+                            } else {
+                                this.workoutBuilderService.buildingWorkout = this.workout;
+                            }
+                        },
+                        (err:any) => {
+                            if (err.status === 404) {
+                                this.router.navigate(['/builder/workouts'])
+                            } else {
+                                console.error(err)
+                            }
+                        }
+                    );
             }
-            this.workout = this.workoutBuilderService.startBuilding(workoutName);
         });
     }
 

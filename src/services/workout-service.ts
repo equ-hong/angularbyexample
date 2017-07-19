@@ -3,6 +3,7 @@ import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/forkJoin';
 
 import {Exercise, WorkoutPlan } from './model';
 
@@ -56,16 +57,51 @@ export class WorkoutService {
         if (exerciseIndex >= 0) this.exercises.splice(exerciseIndex, 1);
     }
 
-    getWorkouts(){
+    getWorkouts() {
         return this.http.get(this.collectionsUrl + '/workouts' + this.params)
             .map((res:Response) => <WorkoutPlan[]>res.json())
+            .map((workouts:Array<any>) => {
+                let result:Array<WorkoutPlan> = [];
+                if (workouts) {
+                    workouts.forEach((workout) => {
+                        result.push(
+                            new WorkoutPlan(
+                                workout.name,
+                                workout.title,
+                                workout.restBetweenExercise,
+                                workout.exercises,
+                                workout.description
+                            ));
+                    });
+                }
+                return result;
+            })
             .catch(WorkoutService.handleError);
     }
 
-    getWorkout(workoutName: string){
-        return this.http.get(this.collectionsUrl + '/workouts/'+ workoutName  + this.params)
-            .map((res: Response) => <WorkoutPlan>res.json())
-            .catch(WorkoutService.handleError);
+    getWorkout(workoutName:string) {
+        return Observable.forkJoin(
+            this.http.get(this.collectionsUrl + '/exercises' + this.params).map((res:Response) => <Exercise[]>res.json()),
+            this.http.get(this.collectionsUrl + '/workouts/' + workoutName + this.params).map((res:Response) => <WorkoutPlan>res.json())
+        ).map(
+            (data:any) => {
+                let allExercises = data[0];
+                let workout = new WorkoutPlan(
+                    data[1].name,
+                    data[1].title,
+                    data[1].restBetweenExercise,
+                    data[1].exercises,
+                    data[1].description
+                )
+                workout.exercises.forEach(
+                    (exercisePlan:any) => exercisePlan.exercise = allExercises.find(
+                        (x:any) => x.name === exercisePlan.name
+                    )
+                )
+                return workout;
+            }
+        )
+        .catch(WorkoutService.handleError);
     }
 
     addWorkout(workout: WorkoutPlan){
@@ -84,8 +120,8 @@ export class WorkoutService {
         }
     }
 
-    static handleError (error: Response) {
-        console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+    static handleError(error: Response) {
+        console.log(error);
+        return Observable.throw(error || 'Server error');
     }
 }

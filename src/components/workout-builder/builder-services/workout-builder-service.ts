@@ -5,22 +5,22 @@ import { ExercisePlan } from "../../../services/model";
 
 @Injectable()
 export class WorkoutBuilderService {
-    buildingWorkout: any;
+    buildingWorkout: WorkoutPlan;
     newWorkout: boolean;
     firstExercise: boolean = true;
 
     constructor(public workoutService:WorkoutService){}
 
-    startBuilding(name: string){
-        if(name){
-            this.buildingWorkout = this.workoutService.getWorkout(name)
-            this.newWorkout = false;
-        }else{
-            let exerciseArray : ExercisePlan[] = [];
-            this.buildingWorkout = new WorkoutPlan("", "", 30, exerciseArray);
-            this.newWorkout = true;
-        }
+    startBuildingNew(){
+        let exerciseArray : ExercisePlan[] = [];
+        this.buildingWorkout = new WorkoutPlan("", "", 30, exerciseArray);
+        this.newWorkout = true;
         return this.buildingWorkout;
+    }
+
+    startBuildingExisting(name: string){
+        this.newWorkout = false;
+        return this.workoutService.getWorkout(name);
     }
 
     removeExercise(exercise: ExercisePlan){
