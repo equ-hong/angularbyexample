@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs/Rx';
 
 import { Exercise, ExercisePlan} from "../../../services/model";
 import { WorkoutBuilderService } from "../builder-services/workout-builder-service";
@@ -9,19 +10,14 @@ import { WorkoutService } from "../../../services/workout-service";
     templateUrl: '/src/components/workout-builder/navigation/left-nav-exercises.component.html'
 })
 export class LeftNavExercisesComponent implements OnInit{
-    exerciseList:Array<Exercise> = [];
-    errorMessage: any;
+    exerciseList:Observable<Exercise[]>;
 
     constructor(
         public workoutService:WorkoutService,
         public workoutBuilderService:WorkoutBuilderService) {}
 
     ngOnInit() {
-        this.workoutService.getExercises()
-            .then(
-                exerciseList => this.exerciseList = exerciseList,
-                error => this.errorMessage = <any>error
-            );
+        this.exerciseList = this.workoutService.getExercises();
     }
 
     addExercise(exercise:Exercise) {

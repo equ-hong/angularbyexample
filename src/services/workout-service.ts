@@ -6,7 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/operator/toPromise';
 
-import {Exercise, WorkoutPlan } from './model';
+import { Exercise, ExercisePlan, WorkoutPlan } from './model';
 
 @Injectable()
 export class WorkoutService {
@@ -20,15 +20,14 @@ export class WorkoutService {
     constructor(public http: Http) {
     }
 
-    getExercises() {
+    getExercises(){
         return this.http.get(this.collectionsUrl + '/exercises' + this.params)
-            .toPromise()
-            .then((res:Response) => <Exercise[]>res.json())
+            .map((res: Response) => <Exercise[]>res.json())
             .catch(WorkoutService.handleError);
     }
 
     getExercise(exerciseName: string){
-        return this.http.get(this.collectionsUrl + '/exercises/'+ exerciseName  + this.params)
+        return this.http.get(this.collectionsUrl + '/exercises/' + exerciseName  + this.params)
             .map((res: Response) => <Exercise>res.json())
             .catch(WorkoutService.handleError);
     }
@@ -59,7 +58,7 @@ export class WorkoutService {
         if (exerciseIndex >= 0) this.exercises.splice(exerciseIndex, 1);
     }
 
-    getWorkouts() {
+    getWorkouts(){
         return this.http.get(this.collectionsUrl + '/workouts' + this.params)
             .map((res:Response) => <WorkoutPlan[]>res.json())
             .map((workouts:Array<any>) => {

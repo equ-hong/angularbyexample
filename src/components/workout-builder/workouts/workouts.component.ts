@@ -1,5 +1,5 @@
-import { Component, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, OnInit, OnDestroy } from '@angular/core';
+import {ActivatedRoute, Router } from '@angular/router';
 
 import { WorkoutPlan } from "../../../services/model";
 import { WorkoutService } from "../../../services/workout-service";
@@ -8,15 +8,19 @@ import { WorkoutService } from "../../../services/workout-service";
     selector: 'workouts',
     templateUrl: '/src/components/workout-builder/workouts/workouts.component.html'
 })
-export class WorkoutsComponent implements OnInit {
-    workoutList:Array<WorkoutPlan> = [];
-    subscription: any;
+export class WorkoutsComponent implements OnInit, OnDestroy {
+    public workoutList:Array<WorkoutPlan> = [];
+    public notFound:boolean = false;
+    private subscription:any;
 
     constructor(
+        public route:ActivatedRoute,
         public router:Router,
-        public workoutService:WorkoutService) {}
+        public workoutService:WorkoutService) {
+    }
 
     ngOnInit() {
+        if(this.route.snapshot.url[1] && this.route.snapshot.url[1].path === 'workout-not-found') this.notFound = true;
         this.subscription = this.workoutService.getWorkouts()
             .subscribe(
                 (workoutList: WorkoutPlan[]) => this.workoutList = workoutList,
@@ -24,7 +28,11 @@ export class WorkoutsComponent implements OnInit {
             );
     }
 
-    onSelect(workout: WorkoutPlan) {
-        this.router.navigate( ['./builder/workout', workout.name] );
+    onSelect(workout:WorkoutPlan) {
+        this.router.navigate(['./builder/workout', workout.name]);
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 }
