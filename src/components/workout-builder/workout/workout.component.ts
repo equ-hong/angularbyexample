@@ -14,6 +14,7 @@ export class WorkoutComponent implements OnInit, OnDestroy{
     sub: any;
     submitted: boolean = false;
     removeTouched: boolean = false;
+    isExistingWorkout: boolean = false;
 
     constructor(
         public route: ActivatedRoute,
@@ -26,6 +27,7 @@ export class WorkoutComponent implements OnInit, OnDestroy{
                 this.workout = this.workoutBuilderService.startBuildingNew();
             } else {
                 let workoutName = params['id'];
+                this.isExistingWorkout = true;
                 this.workoutBuilderService.startBuildingExisting(workoutName)
                     .subscribe(
                         (data:WorkoutPlan) => {
@@ -48,7 +50,7 @@ export class WorkoutComponent implements OnInit, OnDestroy{
         });
     }
 
-    addExercise(exercisePlan: ExercisePlan){
+    addExercise(exercisePlan: ExercisePlan) {
         this.workoutBuilderService.addExercise(exercisePlan);
     }
 
@@ -61,11 +63,13 @@ export class WorkoutComponent implements OnInit, OnDestroy{
         this.workoutBuilderService.removeExercise(exercisePlan);
     }
 
-    save(formWorkout:any){
+    save(formWorkout:any) {
         this.submitted = true;
         if (!formWorkout.valid) return;
-        this.workoutBuilderService.save();
-        this.router.navigate(['/builder/workouts']);
+        this.workoutBuilderService.save().subscribe(
+            success => this.router.navigate(['/builder/workouts']),
+            err => console.error(err)
+        );
     }
 
     ngOnDestroy() {
